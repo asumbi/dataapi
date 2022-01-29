@@ -1,0 +1,8 @@
+INSERT INTO Consent VALUES(101, 0)
+INSERT INTO Consent VALUES(102, 1)
+
+INSERT INTO Data VALUES(101, 'EN', 'I love Java')
+INSERT INTO Data VALUES(102, 'DE', 'Python')
+INSERT INTO Data VALUES(103, 'FR', 'Octopus sucks')
+INSERT INTO Data VALUES(104, 'RU', 'Xldeploy linux')
+INSERT INTO Data VALUES(105, 'US', 'Minikube Kubernetes')
