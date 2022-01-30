@@ -1,0 +1,7 @@
+com\joshua\dataapi\model\Consent.class
+com\joshua\dataapi\model\CustomerData.class
+com\joshua\dataapi\dao\CustomerDataRepo.class
+com\joshua\dataapi\controller\ConsentController.class
+com\joshua\dataapi\dao\ConsentRepo.class
+com\joshua\dataapi\DataapiApplication.class
+com\joshua\dataapi\controller\CustomerDataController.class
