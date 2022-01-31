@@ -1,0 +1,73 @@
+
+Choice of H2 Database
+---------------------
+
+My motivation to use the java-in-memory database is to 
+1. Avoid extra DB setup
+2. Allow me the freedom to work with database changes during the development and testing.
+3. Anybody who also would like to test the code gets equally the same capability.
+
+Testing the data endpoints
+------------------------------
+
+During testing i used mostly the application postman.
+
+However in the absence of postman curl calls can be used.
+
+Add the customer dialog data to the 
+Endpoint: http://localhost:8080/data/{customerid}/{dialogid}
+curl -i -X POST -H "Content-Type:application/json" -d '{"text": "I Love Java 8", "language": "EN"}' http://localhost:8080/data/104/101
+
+The API returns the JSON object
+{"id":101,"text":"I Love Java 8","language":"EN","consent":null}
+
+If using curl on Windows, you have to escape the double-quote character inside the String that represents the JSON body:
+d "{\"text\": \"I Love Java 8\", \"language\": \"EN\"}"
+
+From the response the association to a consent message is missing ( still null )
+
+We must now add the consent association to the data endpoint we just created:
+Endpoint: http://localhost:8080/consents/{dialogid}
+curl -i -X POST -H "Content-Type:application/json" -d '{"consent": 1}' http://localhost:8080/consents/101
+
+The result of the POST request is a JSON object containing the Consent record:
+
+{"id":1,"consent":true}
+
+Verifying the result of the customer dialog data:
+[{"id":101,"text":"I Love Java 8","language":"EN","consent":{"id":1,"consent":true}}]
+
+Add another customer dialog data
+curl -i -X POST -H "Content-Type:application/json" -d '{"text": "Node js is cool", "language": "DE"}' http://localhost:8080/data/105/102
+
+Response:
+{"id":102,"text":"Node js is cool","language":"DE","consent":null}
+
+Two data records available
+
+curl -i -X GET http://localhost:8080/data
+[{"id":101,"text":"I Love Java 8","language":"EN","consent":{"id":3,"consent":true}},{"id":102,"text":"Node js is cool","language":"DE","consent":null}]
+
+Add negative consent to dialog 102
+
+curl -i -X POST -H "Content-Type:application/json" -d '{"consent": 0}' http://localhost:8080/consents/101
+response is empty
+
+Confirm that the last customer dialog record has been deleted
+
+curl -i -X GET http://localhost:8080/data
+[{"id":101,"text":"I Love Java 8","language":"EN","consent":{"id":3,"consent":true}}]
+
+Retrieve customer data based on language filter
+
+curl -i -X GET http://localhost:8080/data/language/DE
+[{"id":103,"text":"Node js is cool","language":"DE","consent":{"id":5,"consent":true}}]
+
+
+Scaling the system
+-------------------
+The client's application state is never stored on the server, but passed around from the client to every place that needs it.
+You transfer the state around instead of having the server store it. 
+This would be the way to scale to millions of concurrent users.
+
+
